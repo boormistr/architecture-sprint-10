@@ -1,0 +1,19 @@
+
+@startuml
+!define C4PlantUML https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include C4PlantUML
+
+Person(doctor, "Врач", "Работает с медицинскими картами")
+Person(patient, "Пациент", "Предоставляет медицинскую историю")
+System_Boundary(medical_record_system, "Система медицинских карт") {
+    Component(medical_db, "База данных медицинских карт", "Хранение данных о пациентах (шифрование, RBAC)")
+    Component(scanned_records, "Сканированные документы", "Сканы медицинских карт (шифрование)")
+    Component(api_gateway, "API Gateway", "Проверка полномочий, аудит")
+}
+
+Rel(patient, doctor, "Предоставляет медицинскую историю", "Консультация")
+Rel(doctor, api_gateway, "Запрос доступа", "HTTPS")
+Rel(api_gateway, medical_db, "Обновляет медицинские карты", "Шифрование")
+Rel(api_gateway, scanned_records, "Загружает сканы", "Шифрование")
+
+@enduml

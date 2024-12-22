@@ -1,0 +1,15 @@
+
+@startuml
+!define C4PlantUML https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include C4PlantUML
+
+Person(warehouse_staff, "Сотрудник склада", "Управляет ТМЦ")
+System_Boundary(inventory_system, "Система управления ТМЦ") {
+    Component(inventory_1c, "1С Торговля и склад", "Учет товарных остатков (шифрование, RBAC)")
+    Component(tmc_db, "База данных ТМЦ", "Хранение данных о запасах (шифрование)")
+}
+
+Rel(warehouse_staff, inventory_1c, "Обновляет записи ТМЦ", "HTTPS")
+Rel(inventory_1c, tmc_db, "Синхронизирует данные", "Шифрование")
+
+@enduml
