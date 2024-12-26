@@ -1,0 +1,43 @@
+
+@startuml
+!define C4PlantUML https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include C4PlantUML
+
+Person(patient, "Пациент", "Использует сервис для записи и получения медицинских услуг")
+Person(receptionist, "Ресепшенист", "Регистрирует пациентов и управляет записями")
+Person(doctor, "Врач", "Просматривает и обновляет медицинские данные пациентов")
+Person(cashier, "Кассир", "Обрабатывает платежи")
+
+System_Boundary(company_system, "Система компании") {
+    Container(web_portal, "Веб-портал", "React", "Интерфейс для пациентов и сотрудников")
+    Container(mobile_app, "Мобильное приложение", "Flutter", "Мобильный доступ для пациентов")
+    Container(api_gateway, "API Gateway", "NGINX", "Контроль доступа и проверка полномочий")
+    Container(db_patients, "БД Пациентов", "PostgreSQL", "Хранение личных и медицинских данных (AES-256, RBAC)")
+    Container(db_payments, "БД Платежей", "PostgreSQL", "Хранение финансовых данных (AES-256, RBAC)")
+    Container(db_analytics, "БД Аналитики", "ClickHouse", "Обезличенные данные для аналитики")
+    Container(logging, "Система логирования", "ELK Stack", "Мониторинг и аудит операций")
+    Container(storage_archives, "Архив данных", "S3", "Долговременное хранение с политиками уничтожения")
+}
+
+Rel(patient, web_portal, "Просмотр и управление записями", "HTTPS")
+Rel(patient, mobile_app, "Просмотр и управление записями", "HTTPS")
+Rel(web_portal, api_gateway, "Запросы данных пациентов", "JWT, HTTPS")
+Rel(mobile_app, api_gateway, "Запросы данных пациентов", "JWT, HTTPS")
+Rel(api_gateway, db_patients, "Чтение/запись данных пациентов", "SQL, шифрование")
+Rel(api_gateway, db_payments, "Обработка финансовых данных", "SQL, шифрование")
+Rel(api_gateway, db_analytics, "Передача обезличенных данных", "Batch ETL")
+Rel(api_gateway, logging, "Логирование операций", "HTTPS")
+Rel(logging, storage_archives, "Архивирование данных", "Secure Backup")
+
+Rel(receptionist, web_portal, "Управление записями пациентов", "HTTPS")
+Rel(doctor, web_portal, "Доступ к медицинским картам", "HTTPS")
+Rel(cashier, web_portal, "Управление оплатой", "HTTPS")
+
+UpdateElementStyle(api_gateway, $bgColor="LightBlue", $fontColor="Black")
+UpdateElementStyle(db_patients, $bgColor="LightGreen", $fontColor="Black")
+UpdateElementStyle(db_payments, $bgColor="LightGreen", $fontColor="Black")
+UpdateElementStyle(db_analytics, $bgColor="LightGray", $fontColor="Black")
+UpdateElementStyle(logging, $bgColor="Orange", $fontColor="Black")
+UpdateElementStyle(storage_archives, $bgColor="Yellow", $fontColor="Black")
+
+@enduml

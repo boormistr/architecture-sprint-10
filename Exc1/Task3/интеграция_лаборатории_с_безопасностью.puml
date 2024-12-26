@@ -1,0 +1,17 @@
+
+@startuml
+!define C4PlantUML https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include C4PlantUML
+
+Person(lab_tech, "Сотрудник лаборатории", "Обрабатывает результаты анализов")
+Person(patient, "Пациент", "Сдает анализы")
+System_Boundary(lab_system, "Интеграция лабораторий") {
+    Component(lab_api, "API лаборатории", "Обмен данными с внешними лабораториями (шифрование, проверка полномочий)")
+    Component(lab_db, "База данных результатов анализов", "Хранение результатов (шифрование)")
+}
+
+Rel(patient, lab_tech, "Сдает образцы", "Физический процесс")
+Rel(lab_tech, lab_api, "Передает результаты анализов", "API (HTTPS, проверка полномочий)")
+Rel(lab_api, lab_db, "Сохраняет результаты анализов", "Шифрование")
+
+@enduml

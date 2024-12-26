@@ -1,0 +1,15 @@
+@startuml
+!define C4PlantUML https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include C4PlantUML
+
+Person(doctor, "Врач", "Работает с медицинскими картами")
+Person(patient, "Пациент", "Предоставляет медицинскую историю")
+System_Boundary(medical_record_system, "Система медицинских карт") {
+    Component(medical_db, "База данных медицинских карт", "Хранение данных о пациентах")
+    Component(scanned_records, "Сканированные документы", "Сканы медицинских карт")
+}
+
+Rel(patient, doctor, "Предоставляет медицинскую историю", "Консультация")
+Rel(doctor, medical_db, "Обновляет медицинские карты", "Ввод данных")
+Rel(doctor, scanned_records, "Загружает сканы", "Файловая загрузка")
+@enduml

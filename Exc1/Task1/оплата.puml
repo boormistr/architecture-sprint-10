@@ -1,0 +1,15 @@
+@startuml
+!define C4PlantUML https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include C4PlantUML
+
+Person(cashier, "Кассир", "Обрабатывает платежи")
+Person(patient, "Пациент", "Оплачивает услуги")
+System_Boundary(payment_system, "Система оплаты") {
+    Component(accounting_1c, "1С Бухгалтерия", "Обработка платежей и связь с ККТ")
+    Component(kkt, "ККТ", "Фискализация операций")
+}
+
+Rel(patient, cashier, "Оплачивает услуги", "Наличные/Карта")
+Rel(cashier, accounting_1c, "Регистрирует оплату", "Ввод данных")
+Rel(accounting_1c, kkt, "Передача данных фискализации", "TCP/IP - OLE")
+@enduml
